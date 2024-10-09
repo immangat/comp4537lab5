@@ -71,8 +71,8 @@ class App {
     }
 
     handleRequests(req, res) {
-        console.log(req.host.origin);
-        if (req.host.origin !== 'https://comp4537lab5frontend.vercel.app') {
+        console.log(req.headers.origin);
+        if (req.headers.origin !== 'https://comp4537lab5frontend.vercel.app') {
             // Allow CORS for all origins
             res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS'); // Allow specific methods
