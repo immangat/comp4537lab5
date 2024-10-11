@@ -76,12 +76,18 @@ class App {
                                 data: sqlData
                             }));
                             console.log(`Successfully executed ${sqlStatement} query`)
-                        })
+                        }).catch(err => {
+                        console.log("sfsfsf", err)
+                        res.writeHead(500, {'Content-Type': 'application/json'});
+                        res.end(JSON.stringify({
+                            message: `Could execute ${sqlStatement} `
+                        }));
+                    })
                 } catch (error) {
-                    console.log(error)
+                    console.log("sfsfsf", error)
                     res.writeHead(500, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify({
-                        message: `Could execute ${sqlStatement} `
+                        message: `Could not execute ${sqlStatement} `
                     }));
                 }
 

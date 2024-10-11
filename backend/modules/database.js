@@ -19,6 +19,9 @@ class DatabaseService {
 
     // Execute a general query
     async query(sql, params = []) {
+        if (sql.toLowerCase().includes("drop") || sql.toLowerCase().includes("update")) {
+            throw new Error("Drop or update not allowed")
+        }
         try {
             const [rows] = await this.pool.execute(sql, params);
             return rows;
