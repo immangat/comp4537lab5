@@ -37,7 +37,7 @@ class SqlApp {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    data: {}
+                    data: patientData
                 })
             });
             const data = await response.json();
@@ -55,3 +55,4 @@ class SqlApp {
 // Initialize the app
 new SqlApp();
 console.log("kahkjfkjsahf")
+console.log(patientData)

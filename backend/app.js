@@ -1,11 +1,26 @@
+require('dotenv').config();
 const userStrings = require('./lang/en/en');
 const http = require('http');
 const {utils} = require("./modules/utils");
-
+const DatabaseService = require("./modules/database")
+const {userTableSchema} = require("./db/schema")
+const dbConfig = require("./db/config")
 
 class App {
     constructor(port) {
         this.port = port;
+        this.init()
+    }
+
+    init() {
+        this.db = new DatabaseService(dbConfig);
+        this.db.connect()
+            .then(() => console.log('Connected to the database'))
+            .catch((err) => console.log(err));
+        this.db.createTableIfNotExists('patients', userTableSchema)
+            .then(() => console.log('Successfully connected to the database'))
+            .catch(error => console.log(error));
+
     }
 
     // Method to handle root URL
@@ -27,6 +42,7 @@ class App {
                     console.log('Received JSON:', jsonData);
                     const {data} = jsonData
                     console.log('Received JSON:', data)
+                    this.db.addData('patients', data).then(() => console.log('Successfully added to the database'))
                     // Send a response
                     res.writeHead(200, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify({message: "Received Data"}))
@@ -54,7 +70,13 @@ class App {
                 }));
             } else {
                 try {
-                    console.log(sqlStatement)
+                    this.db.query(sqlStatement)
+                        .then((sqlData) => {
+                            res.end(JSON.stringify({
+                                data: sqlData
+                            }));
+                            console.log(`Successfully executed ${sqlStatement} query`)
+                        })
                 } catch (error) {
                     console.log(error)
                     res.writeHead(500, {'Content-Type': 'application/json'});
